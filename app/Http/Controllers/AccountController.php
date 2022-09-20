@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    public function reset(Request $request): void
+    public function reset(Request $request): string
     {
-        return;
+        return 'OK';
     }
 }
