@@ -16,3 +16,6 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+
+$router->post('reset', ['as' => 'account.reset', 'uses' => '\App\Http\Controllers\AccountController@reset']);
