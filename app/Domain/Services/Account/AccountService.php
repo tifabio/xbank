@@ -42,9 +42,7 @@ class AccountService
         $amount = $params->get('amount');
 
         $account = $this->accountRepository->getById($origin);
-        if(!$account) {
-            throw new AccountNotFoundException();
-        }
+        $this->validateAccount($account);
 
         $account->setBalance($account->getBalance() - $amount);
 
@@ -55,12 +53,34 @@ class AccountService
         ];
     }
 
+    public function transfer($params)
+    {
+        $origin = $params->get('origin');
+        $destination = $params->get('destination');
+        $amount = $params->get('amount');
+
+        $originAccount = $this->accountRepository->getById($origin);
+        $this->validateAccount($originAccount);
+
+        $destinationAccount = $this->accountRepository->getById($destination);
+        $this->validateAccount($destinationAccount);
+
+        $originAccount->setBalance($originAccount->getBalance() - $amount);
+        $destinationAccount->setBalance($destinationAccount->getBalance() + $amount);
+
+        $this->accountRepository->save($originAccount);        
+        $this->accountRepository->save($destinationAccount);    
+        
+        return [
+            'origin' => $originAccount->toArray(),
+            'destination' => $destinationAccount->toArray()
+        ];
+    }
+
     public function getBalance($accountId)
     {
         $account = $this->accountRepository->getById($accountId);
-        if(!$account) {
-            throw new AccountNotFoundException();
-        } 
+        $this->validateAccount($account);
         
         return $account->getBalance();
     } 
@@ -68,5 +88,12 @@ class AccountService
     public function reset()
     {
         $this->accountRepository->reset();
+    }
+
+    private function validateAccount($account)
+    {
+        if(!$account) {
+            throw new AccountNotFoundException();
+        }
     }
 }
