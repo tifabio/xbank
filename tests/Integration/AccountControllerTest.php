@@ -258,7 +258,6 @@ class AccountControllerTest extends TestCase
 
         $originId = '200';
         $destinationId = '300';
-        $balance = 20;
         $amount = 15;
 
         $params = [
