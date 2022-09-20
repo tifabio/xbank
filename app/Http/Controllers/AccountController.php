@@ -15,12 +15,13 @@ class AccountController extends Controller
         $this->accountService = $accountService;
     }
 
-    public function create($id)
+    public function event(Request $request)
     {
-        $this->accountService->create($id);
+        $method = $request->json()->get('type');
+        return $this->accountService->$method($request->json());
     }
 
-    public function getBalance(Request $request)
+    public function balance(Request $request)
     {
         return $this->accountService->getBalance($request->get('account_id') ?? 0);
     }

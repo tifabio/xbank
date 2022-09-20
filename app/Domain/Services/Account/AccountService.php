@@ -2,6 +2,7 @@
 
 namespace App\Domain\Services\Account;
 
+use App\Domain\Entities\Account\Account;
 use App\Domain\Exceptions\Account\AccountNotFoundException;
 use App\Infrastructure\Repositories\AccountRepository;
 
@@ -14,19 +15,35 @@ class AccountService
         $this->accountRepository = $accountRepository;
     }
 
-    public function create($id)
+    public function deposit($params)
     {
-        $this->accountRepository->create($id);
+        $destination = $params->get('destination');
+        $amount = $params->get('amount');
+        
+        $account = $this->accountRepository->getById($destination);
+        if(!$account) {
+            $account = new Account();
+            $account->setAccountId($destination);
+            $account->setBalance(0);
+        }
+        
+        $account->setBalance($account->getBalance() + $amount);
+
+        $this->accountRepository->save($account);
+
+        return [
+            'destination' => $account->toArray()
+        ];
     }
 
     public function getBalance($accountId)
     {
         $account = $this->accountRepository->getById($accountId);
-        if($account) {
-            return $account;
+        if(!$account) {
+            throw new AccountNotFoundException();
         } 
         
-        throw new AccountNotFoundException();
+        return $account->getBalance();
     } 
 
     public function reset()

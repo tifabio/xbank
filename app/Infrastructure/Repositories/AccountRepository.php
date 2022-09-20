@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Entities\Account\Account;
 use Illuminate\Support\Facades\Session;
 
 class AccountRepository
@@ -14,9 +15,9 @@ class AccountRepository
         $this->accounts = Session::get($this->key);
     }
 
-    public function create($id)
+    public function save(Account $account)
     {
-        $this->accounts[$id] = $id;
+        $this->accounts[$account->getAccountId()] = $account;
         Session::put($this->key, $this->accounts);
     }
 
