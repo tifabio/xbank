@@ -15,4 +15,16 @@ class AccountControllerTest extends TestCase
             'OK', $this->response->getContent()
         );
     }
+
+    public function testAccountNotFoundException()
+    {
+        $this->post('/reset');
+
+        $this->get('/balance?account_id=1234');
+
+        $this->response->assertStatus(404);
+        $this->assertEquals(
+            '0', $this->response->getContent()
+        );
+    }
 }
