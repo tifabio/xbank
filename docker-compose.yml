@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+    # image project
+    app:
+        container_name: xbank-app
+        build:
+            context: ./docker
+            dockerfile: Dockerfile
+        image: tifabio/xbank-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks: 
+            - xbanknetwork
+    
+    # nginx
+    nginx:
+        container_name: xbank-nginx
+        image: nginx:alpine
+        restart: unless-stopped
+        ports: 
+            - "8080:80"
+        volumes: 
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks: 
+            - xbanknetwork
+
+networks: 
+    xbanknetwork:
+        driver: bridge
