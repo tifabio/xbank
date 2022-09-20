@@ -2,6 +2,7 @@
 
 namespace App\Domain\Services\Account;
 
+use App\Domain\Exceptions\Account\AccountNotFoundException;
 use App\Infrastructure\Repositories\AccountRepository;
 
 class AccountService
@@ -18,9 +19,14 @@ class AccountService
         $this->accountRepository->create($id);
     }
 
-    public function getAll()
+    public function getBalance($accountId)
     {
-        return $this->accountRepository->getAll();
+        $account = $this->accountRepository->getById($accountId);
+        if($account) {
+            return $account;
+        } 
+        
+        throw new AccountNotFoundException();
     } 
 
     public function reset()

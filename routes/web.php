@@ -19,5 +19,5 @@ $router->get('/', function () use ($router) {
 
 
 $router->post('reset', ['as' => 'account.reset', 'uses' => '\App\Http\Controllers\AccountController@reset']);
+$router->get('balance', ['as' => 'account.balance', 'uses' => '\App\Http\Controllers\AccountController@getBalance']);
 $router->post('create/{id}', ['as' => 'account.create', 'uses' => '\App\Http\Controllers\AccountController@create']);
-$router->get('accounts', ['as' => 'account.getAll', 'uses' => '\App\Http\Controllers\AccountController@getAll']);

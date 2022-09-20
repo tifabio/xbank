@@ -20,12 +20,12 @@ class AccountController extends Controller
         $this->accountService->create($id);
     }
 
-    public function getAll()
+    public function getBalance(Request $request)
     {
-        return $this->accountService->getAll();
+        return $this->accountService->getBalance($request->get('account_id') ?? 0);
     }
 
-    public function reset(): string
+    public function reset()
     {
         $this->accountService->reset();
         return 'OK';

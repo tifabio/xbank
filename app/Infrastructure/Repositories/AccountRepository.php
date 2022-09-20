@@ -20,12 +20,16 @@ class AccountRepository
         Session::put($this->key, $this->accounts);
     }
 
-    public function getAll()
+    public function getById($accountId)
     {
-        return $this->accounts;
+        if(isset($this->accounts[$accountId])) {
+            return $this->accounts[$accountId];
+        }
+
+        return false;
     }
 
-    public function reset(): void
+    public function reset()
     {
         $this->accounts = [];
         Session::forget($this->key);
