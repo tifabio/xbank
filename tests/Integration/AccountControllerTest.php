@@ -130,4 +130,29 @@ class AccountControllerTest extends TestCase
             $balance * 2, $this->response->getContent()
         );
     }
+
+    public function testWithdrawnAccountNotFound()
+    {
+        $this->post('/reset');
+
+        $accountId = '200';
+        $balance = 10;
+
+        $params = [
+            'type' => 'withdrawn',
+            'origin' => $accountId,
+            'amount' => $balance 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $this->response->assertStatus(404);
+        $this->assertEquals(
+            '0', $this->response->getContent()
+        );
+    }
 }

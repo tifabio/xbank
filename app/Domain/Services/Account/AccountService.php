@@ -36,6 +36,16 @@ class AccountService
         ];
     }
 
+    public function withdrawn($params)
+    {
+        $origin = $params->get('destination');
+
+        $account = $this->accountRepository->getById($origin);
+        if(!$account) {
+            throw new AccountNotFoundException();
+        }
+    }
+
     public function getBalance($accountId)
     {
         $account = $this->accountRepository->getById($accountId);
