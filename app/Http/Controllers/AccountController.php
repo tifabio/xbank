@@ -18,7 +18,8 @@ class AccountController extends Controller
     public function event(Request $request)
     {
         $method = $request->json()->get('type');
-        return $this->accountService->$method($request->json());
+        $response = $this->accountService->$method($request->json());
+        return response()->json($response, 201);
     }
 
     public function balance(Request $request)
