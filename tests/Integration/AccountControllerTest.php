@@ -274,17 +274,6 @@ class AccountControllerTest extends TestCase
             $params
         );
 
-        $expected = [
-            'origin' => [
-                'id' => $originId,
-                'balance' => $balance - $amount
-            ],
-            'destination' => [
-                'id' => $destinationId,
-                'balance' => $amount
-            ]
-        ];
-
         $this->response->assertStatus(404);
         $this->assertEquals(
             '0', $this->response->getContent()
