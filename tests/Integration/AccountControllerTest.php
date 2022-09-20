@@ -155,4 +155,49 @@ class AccountControllerTest extends TestCase
             '0', $this->response->getContent()
         );
     }
+
+    public function testWithdrawAccountValidAccount()
+    {
+        $this->post('/reset');
+
+        $accountId = '100';
+        $balance = 20;
+        $withdraw = 5;
+
+        $params = [
+            'type' => 'deposit',
+            'destination' => $accountId,
+            'amount' => $balance 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $params = [
+            'type' => 'withdraw',
+            'origin' => $accountId,
+            'amount' => $withdraw 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $expected = [
+            'origin' => [
+                'id' => $accountId,
+                'balance' => $balance - $withdraw
+            ]
+        ];
+
+        $this->response->assertStatus(201);
+        $this->assertEquals(
+            json_encode($expected), $this->response->getContent()
+        );
+    }
 }

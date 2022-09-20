@@ -38,12 +38,21 @@ class AccountService
 
     public function withdraw($params)
     {
-        $origin = $params->get('destination');
+        $origin = $params->get('origin');
+        $amount = $params->get('amount');
 
         $account = $this->accountRepository->getById($origin);
         if(!$account) {
             throw new AccountNotFoundException();
         }
+
+        $account->setBalance($account->getBalance() - $amount);
+
+        $this->accountRepository->save($account);
+
+        return [
+            'origin' => $account->toArray()
+        ];
     }
 
     public function getBalance($accountId)
