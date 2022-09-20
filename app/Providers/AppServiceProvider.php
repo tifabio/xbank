@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Services\Account\AccountService;
+use App\Infrastructure\Repositories\AccountRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(AccountService::class, function () {
+            $accountRepository = new AccountRepository();
+
+            return new AccountService(
+                $accountRepository, 
+            );
+        });
     }
 }
