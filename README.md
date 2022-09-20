@@ -1,4 +1,4 @@
-# devpay
+# xbank
 
 ### Steps to install:
 
