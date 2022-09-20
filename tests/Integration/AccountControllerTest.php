@@ -131,7 +131,7 @@ class AccountControllerTest extends TestCase
         );
     }
 
-    public function testWithdrawnAccountNotFound()
+    public function testWithdrawAccountNotFound()
     {
         $this->post('/reset');
 
@@ -139,7 +139,7 @@ class AccountControllerTest extends TestCase
         $balance = 10;
 
         $params = [
-            'type' => 'withdrawn',
+            'type' => 'withdraw',
             'origin' => $accountId,
             'amount' => $balance 
         ];

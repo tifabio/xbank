@@ -36,7 +36,7 @@ class AccountService
         ];
     }
 
-    public function withdrawn($params)
+    public function withdraw($params)
     {
         $origin = $params->get('destination');
 
