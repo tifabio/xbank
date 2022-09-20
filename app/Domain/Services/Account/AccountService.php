@@ -63,13 +63,17 @@ class AccountService
         $this->validateAccount($originAccount);
 
         $destinationAccount = $this->accountRepository->getById($destination);
-        $this->validateAccount($destinationAccount);
+        if(!$destinationAccount) {
+            $destinationAccount = new Account();
+            $destinationAccount->setAccountId($destination);
+            $destinationAccount->setBalance(0);
+        }
 
         $originAccount->setBalance($originAccount->getBalance() - $amount);
         $destinationAccount->setBalance($destinationAccount->getBalance() + $amount);
 
-        $this->accountRepository->save($originAccount);        
-        $this->accountRepository->save($destinationAccount);    
+        $this->accountRepository->save($originAccount);     
+        $this->accountRepository->save($destinationAccount);
         
         return [
             'origin' => $originAccount->toArray(),

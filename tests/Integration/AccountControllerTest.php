@@ -156,13 +156,13 @@ class AccountControllerTest extends TestCase
         );
     }
 
-    public function testWithdrawAccountValidAccount()
+    public function testWithdrawValidAccount()
     {
         $this->post('/reset');
 
         $accountId = '100';
         $balance = 20;
-        $withdraw = 5;
+        $amount = 5;
 
         $params = [
             'type' => 'deposit',
@@ -179,7 +179,7 @@ class AccountControllerTest extends TestCase
         $params = [
             'type' => 'withdraw',
             'origin' => $accountId,
-            'amount' => $withdraw 
+            'amount' => $amount 
         ];
 
         $this->json(
@@ -191,13 +191,103 @@ class AccountControllerTest extends TestCase
         $expected = [
             'origin' => [
                 'id' => $accountId,
-                'balance' => $balance - $withdraw
+                'balance' => $balance - $amount
             ]
         ];
 
         $this->response->assertStatus(201);
         $this->assertEquals(
             json_encode($expected), $this->response->getContent()
+        );
+    }
+
+    public function testTransferValidAccount()
+    {
+        $this->post('/reset');
+
+        $originId = '100';
+        $destinationId = '300';
+        $balance = 20;
+        $amount = 15;
+
+        $params = [
+            'type' => 'deposit',
+            'destination' => $originId,
+            'amount' => $balance 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $params = [
+            'type' => 'transfer',
+            'origin' => $originId,
+            'destination' => $destinationId,
+            'amount' => $amount 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $expected = [
+            'origin' => [
+                'id' => $originId,
+                'balance' => $balance - $amount
+            ],
+            'destination' => [
+                'id' => $destinationId,
+                'balance' => $amount
+            ]
+        ];
+
+        $this->response->assertStatus(201);
+        $this->assertEquals(
+            json_encode($expected), $this->response->getContent()
+        );
+    }
+
+    public function testTransferAccountNotFound()
+    {
+        $this->post('/reset');
+
+        $originId = '200';
+        $destinationId = '300';
+        $balance = 20;
+        $amount = 15;
+
+        $params = [
+            'type' => 'transfer',
+            'origin' => $originId,
+            'destination' => $destinationId,
+            'amount' => $amount 
+        ];
+
+        $this->json(
+            'POST',
+            '/event',
+            $params
+        );
+
+        $expected = [
+            'origin' => [
+                'id' => $originId,
+                'balance' => $balance - $amount
+            ],
+            'destination' => [
+                'id' => $destinationId,
+                'balance' => $amount
+            ]
+        ];
+
+        $this->response->assertStatus(404);
+        $this->assertEquals(
+            '0', $this->response->getContent()
         );
     }
 }
