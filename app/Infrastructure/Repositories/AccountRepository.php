@@ -33,7 +33,6 @@ class AccountRepository
     public function reset()
     {
         $this->accounts = [];
-        Storage::delete($this->key);
         Storage::put($this->key, '');
     }
 }
