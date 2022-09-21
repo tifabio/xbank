@@ -12,7 +12,7 @@ class AccountRepository
 
     public function __construct()
     {
-        $this->accounts = unserialize(Storage::get($this->key));
+        $this->accounts = Storage::exists($this->key) ? unserialize(Storage::get($this->key)) : [];
     }
 
     public function save(Account $account)
