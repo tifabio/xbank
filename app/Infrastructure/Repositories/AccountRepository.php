@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Entities\Account\Account;
-use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Storage;
+ 
 class AccountRepository
 {
     private $accounts;
@@ -12,13 +12,13 @@ class AccountRepository
 
     public function __construct()
     {
-        $this->accounts = Session::get($this->key);
+        $this->accounts = unserialize(Storage::get($this->key));
     }
 
     public function save(Account $account)
     {
         $this->accounts[$account->getAccountId()] = $account;
-        Session::put($this->key, $this->accounts);
+        Storage::put($this->key, serialize($this->accounts));
     }
 
     public function getById($accountId)
@@ -33,6 +33,7 @@ class AccountRepository
     public function reset()
     {
         $this->accounts = [];
-        Session::forget($this->key);
+        Storage::delete($this->key);
+        Storage::put($this->key, '');
     }
 }
